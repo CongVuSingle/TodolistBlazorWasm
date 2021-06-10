@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TodolistBlazor.Models;
 using TodolistBlazor.Models.DTOs;
 using TodolistBlazorWasm.Components;
+using TodolistBlazorWasm.Pages.Components;
 using TodolistBlazorWasm.Services;
 
 namespace TodolistBlazorWasm.Pages
@@ -16,6 +17,8 @@ namespace TodolistBlazorWasm.Pages
         [Inject] private ITaskAPIClient TaskAPIClient { get; set; }
 
         protected Confirmation DeleteConfirmation { get; set; }
+
+        protected AssignTask AssignTaskDialog { get; set; } //AssignTask này của component
 
         private Guid DeleteID { get; set; }
 
@@ -45,6 +48,18 @@ namespace TodolistBlazorWasm.Pages
             {
                 await TaskAPIClient.DeleteTask(DeleteID);// sau khi ấn delete thì chưa xóa task đó mà phỉa reload tiếp
                 Tasks = await TaskAPIClient.GetTaskList(TaskListSearch); //gọi lại dòng này sẽ reload lại
+            }
+        }
+        public void OpenAssignPopup(Guid ID)
+        {
+            AssignTaskDialog.Show(ID);
+        }
+
+        public async Task AssignTaskSuccess(bool result)
+        {
+            if (result) // nếu đúng thì reload lại trang
+            {
+                Tasks = await TaskAPIClient.GetTaskList(TaskListSearch);
             }
         }
     }

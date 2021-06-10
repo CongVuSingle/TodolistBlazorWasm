@@ -11,7 +11,7 @@ namespace TodolistBlazorWasm.Services
 {
     public class TaskAPIClient : ITaskAPIClient
     {
-        public HttpClient _httpClient;
+        public HttpClient _httpClient;// httpCLient dùng để nhận data và gửi data tư web api thay cho webclient cũ
 
         public TaskAPIClient(HttpClient httpClient)
         {
@@ -41,6 +41,12 @@ namespace TodolistBlazorWasm.Services
             string url = $"/api/tasks?{taskListSearch.Name}&assigneeID={taskListSearch.AssigneeID}&priority={taskListSearch.Priority}";
             var result = await _httpClient.GetFromJsonAsync<List<TaskDTO>>(url);
             return result;
+        }
+
+        public async Task<bool> UpdateAssignTask(Guid ID, AssignTaskRequest request)
+        {
+            var result = await _httpClient.PutAsJsonAsync($"/api/tasks/{ID}/assign", request);
+            return result.IsSuccessStatusCode;
         }
 
         public async Task<bool> UpdateTask(Guid ID, TaskUpdateRequest request)

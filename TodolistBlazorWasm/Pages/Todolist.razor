@@ -1,4 +1,5 @@
 ﻿@page "/Todolist"
+@using TodolistBlazorWasm.Pages.Components;
 @using TodolistBlazorWasm.Components;
 
 @inject IConfiguration Configuration
@@ -33,7 +34,9 @@ else
                     <tr>
                         <td>@item.Name</td>
                         <td><PriorityLabel Priority="item.Priority"></PriorityLabel></td>
-                        <td>@item.AssigneeName</td>
+                        <td>
+                            <a style="cursor:pointer;" @onclick="()=>OpenAssignPopup(item.ID)">@item.AssigneeName</a>
+                        </td>
                         <td>@item.CreateDate.ToString(Configuration["DateTimeFormat"])</td>
                         <td><StatusLabel Status="item.Status"></StatusLabel></td>
                         <td>
@@ -51,6 +54,8 @@ else
                   @ref="DeleteConfirmation" 
                   ConfirmationChanged="OnConfirmDeleteTask">
     </Confirmation>
+
+    <AssignTask @ref="AssignTaskDialog" CloseEventCallback="AssignTaskSuccess"></AssignTask>
 }
 
 
