@@ -1,64 +1,71 @@
 ﻿@using TodolistBlazor.Models;
 @using TodolistBlazor.Models.DTOs;
-@using TodolistBlazor.Models.Enums; 
+@using TodolistBlazor.Models.Enums;
 @using TodolistBlazorWasm.Services;
 
-@inject IToastService ToastService;
 @inject ITaskAPIClient TaskAPIClient;
 @inject IUserAPIClient UserAPIClient;
 
-<EditForm Model="@TaskLiskSearch" OnSubmit=@SearchForm>
-    <div class="row">
-        <div class="col">
-            <label>Name</label>
-            <InputText class="form-control" placeholder="Name" @bind-Value="TaskLiskSearch.Name"></InputText>
-        </div>
+@if (Assignees != null)
+{
+    <EditForm Model="@TaskLiskSearch" OnSubmit=@SearchForm>
+        <div class="row">
+            <div class="col">
+                <label>Name</label>
+                <InputText class="form-control" placeholder="Name" @bind-Value="TaskLiskSearch.Name"></InputText>
+            </div>
 
-        <div class="col">
-            <label>Assingee</label>
-            <InputSelect class="form-control" @bind-Value="TaskLiskSearch.AssigneeID">
-                <option>Select an assignee</option>
-                @foreach (var assignee in Assignees)
-                {
-                    <option value="@assignee.ID">@assignee.FullName</option>
-                }
-            </InputSelect>
-        </div>
+            <div class="col">
+                <label>Assingee</label>
+                <InputSelect class="form-control" @bind-Value="TaskLiskSearch.AssigneeID">
+                    <option>Select an assignee</option>
+                    @foreach (var assignee in Assignees)
+                        {
+                        <option value="@assignee.ID">@assignee.FullName</option>
+                        }
+                </InputSelect>
+            </div>
 
-        <div class="col">
-            <label>Priority</label>
-            <InputSelect class="form-control" @bind-Value="TaskLiskSearch.Priority">
-                <option>Select an priority</option>
-                @foreach (string item in Enum.GetNames(typeof(Priority)))
-                {
-                    <option value="@item">@item</option>
-                }
-            </InputSelect>
-        </div>
+            <div class="col">
+                <label>Priority</label>
+                <InputSelect class="form-control" @bind-Value="TaskLiskSearch.Priority">
+                    <option>Select an priority</option>
+                    @foreach (string item in Enum.GetNames(typeof(Priority)))
+                        {
+                        <option value="@item">@item</option>
+                        }
+                </InputSelect>
+            </div>
 
-        <div class="col">
-            <button type="submit" class="btn btn-success mt-4">Search</button>
-        </div>
+            <div class="col">
+                <button type="submit" class="btn btn-success mt-4">Search</button>
+            </div>
 
-        <div class="col">
-            <a href="/taskCreate" class="btn btn-primary mt-4">Create</a>
+            <div class="col">
+                <a href="/taskCreate" class="btn btn-primary mt-4">Create</a>
+            </div>
         </div>
-    </div>
-</EditForm>
+    </EditForm>
+}
 
 @code {
     public TaskListSearch TaskLiskSearch = new TaskListSearch();
+
     private List<AssigneeDTO> Assignees;
 
-        protected override Task OnInitializedAsync()
-        {
-            Assignees = await UserAPIClient.GetAssignees();
-        }
+    [Parameter]
+    public EventCallback<TaskListSearch> OnSearch { get; set; }
 
 
-        private async Task SearchForm(EditContext context)
+
+    protected async override Task OnInitializedAsync()
     {
-        ToastService.ShowInfo("Search completed", "Info");
-        Tasks = await TaskAPIClient.GetTaskList(TaskLiskSearch);
+        Assignees = await UserAPIClient.GetAssignees();
+    }
+
+
+    private async Task SearchForm(EditContext context)
+    {
+        await OnSearch.InvokeAsync(TaskLiskSearch);//TaskSearch là con sẽ truyền giá trị cần search cho cha là Todolist.razor.cs qua sự kiện Eventcallback này
     }
 }
