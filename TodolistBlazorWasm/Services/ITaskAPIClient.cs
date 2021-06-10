@@ -16,7 +16,9 @@ namespace TodolistBlazorWasm.Services
         Task<bool> CreateTask(TaskCreateRequest request);
 
         Task<bool> UpdateTask(Guid ID, TaskUpdateRequest request);
+        Task<bool> UpdateAssignTask(Guid ID, AssignTaskRequest request);
 
         Task<bool> DeleteTask(Guid ID);
+
     }
 }

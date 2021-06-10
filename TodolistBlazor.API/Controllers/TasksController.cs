@@ -112,6 +112,35 @@ namespace TodolistBlazor.API.Controllers
         //request là những field cần thao tác từ người dùng
         //DTO là những gì mà db trả ra khi có 200 code, nhưng sẽ ko trả tất cả
 
+
+        [HttpPut]
+        [Route("{id}/assign")]
+        public async Task<IActionResult> UpdateAssignTask([FromRoute] Guid id, [FromBody] AssignTaskRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var taskFromDb = await _taskRepository.GetByID(id);
+            if (taskFromDb == null)
+            {
+                return NotFound($"{id} is not found");
+            }
+
+            taskFromDb.AssigneeID = request.UserID.Value;// update field nào đó mà ko update tất
+
+            var taskResult = await _taskRepository.Update(taskFromDb);
+
+            return Ok(new TaskDTO()
+            {
+                Name = taskResult.Name,
+                Status = taskResult.Status,
+                ID = taskResult.ID,
+                AssigneeID = taskResult.AssigneeID,
+                Priority = taskResult.Priority,
+                CreateDate = taskResult.CreateDate,
+            });
+        }
+
         //api/tasks/1
         [HttpDelete]
         [Route("{id}")]
