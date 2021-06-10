@@ -24,6 +24,12 @@ namespace TodolistBlazorWasm.Services
             return result.IsSuccessStatusCode;
         }
 
+        public async Task<bool> DeleteTask(Guid ID)
+        {
+            var result = await _httpClient.DeleteAsync($"/api/tasks/{ID}");
+            return result.IsSuccessStatusCode;
+        }
+
         public async Task<TaskDTO> GetTaskDetail(string id)
         {
             var result = await _httpClient.GetFromJsonAsync<TaskDTO>($"api/tasks/{id}");
