@@ -1,10 +1,12 @@
 ﻿using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TodolistBlazor.Models;
 using TodolistBlazor.Models.DTOs;
+using TodolistBlazorWasm.Components;
 using TodolistBlazorWasm.Services;
 
 namespace TodolistBlazorWasm.Pages
@@ -12,7 +14,11 @@ namespace TodolistBlazorWasm.Pages
     public partial class Todolist // code behind
     {
         [Inject] private ITaskAPIClient TaskAPIClient { get; set; }
-        
+
+        protected Confirmation DeleteConfirmation { get; set; }
+
+        private Guid DeleteID { get; set; }
+
         private List<TaskDTO> Tasks;
 
         private TaskListSearch TaskListSearch = new TaskListSearch();
@@ -25,6 +31,21 @@ namespace TodolistBlazorWasm.Pages
         {
             TaskListSearch = taskListSearch;
             Tasks = await TaskAPIClient.GetTaskList(TaskListSearch);
+        }
+
+        public void OnDeleteTask(Guid deleteID)//button1
+        {
+            DeleteID = deleteID;// bấm nút 1 thì nút 2 sẽ bắt được ID
+            DeleteConfirmation.Show();
+        }
+
+        public async Task OnConfirmDeleteTask(bool deleteConfirmed)//button2
+        {
+            if (deleteConfirmed)
+            {
+                await TaskAPIClient.DeleteTask(DeleteID);// sau khi ấn delete thì chưa xóa task đó mà phỉa reload tiếp
+                Tasks = await TaskAPIClient.GetTaskList(TaskListSearch); //gọi lại dòng này sẽ reload lại
+            }
         }
     }
 

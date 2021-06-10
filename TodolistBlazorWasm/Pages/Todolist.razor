@@ -11,10 +11,10 @@
 }
 else
 {
-<div class="row">
-    @*"OnSeach" là eventCallback đc đăng ký bên TaskSearch.razor và "SeachTask" là sự kiện để th cha bắt đc TaskListSearch*@
-    <TaskSearch OnSearch="SearchTask"></TaskSearch> @*muốn sau khi bấm nút search thì có event bắn ra,  event này ở bên TaskSearch Component để biết cho nó update task*@
-</div>
+    <div class="row">
+        @*"OnSeach" là eventCallback đc đăng ký bên TaskSearch.razor và "SeachTask" là sự kiện để th cha bắt đc TaskListSearch*@
+        <TaskSearch OnSearch="SearchTask"></TaskSearch> @*muốn sau khi bấm nút search thì có event bắn ra,  event này ở bên TaskSearch Component để biết cho nó update task*@
+    </div>
     <div class="row mt-5">
         <table class="table table-striped">
             <thead>
@@ -39,12 +39,18 @@ else
                         <td>
                             <a href="/taskDetails/@item.ID" class="btn btn-primary">Detail</a>
                             <a href="/taskEdit/@item.ID" class="btn btn-warning">Edit</a>
+                            <button class="btn btn-danger" @onclick="()=>OnDeleteTask(item.ID)">Delete</button>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
+    <Confirmation ConfirmationMessage="Are you sure to delete?"
+                  ConfirmationTitle="Delete Task"
+                  @ref="DeleteConfirmation" 
+                  ConfirmationChanged="OnConfirmDeleteTask">
+    </Confirmation>
 }
 
 

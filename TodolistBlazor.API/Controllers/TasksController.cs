@@ -111,5 +111,28 @@ namespace TodolistBlazor.API.Controllers
         }
         //request là những field cần thao tác từ người dùng
         //DTO là những gì mà db trả ra khi có 200 code, nhưng sẽ ko trả tất cả
+
+        //api/tasks/1
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
+        {
+            var task = await _taskRepository.GetByID(id);
+            if (task == null)
+            {
+                return NotFound($"{id} is not found");
+            }
+
+            await _taskRepository.Delete(task);
+            return Ok(new TaskDTO()// dto đẻ hiển thị các field trên client
+            {
+                Name = task.Name,
+                Status = task.Status,
+                ID = task.ID,
+                AssigneeID = task.AssigneeID,
+                Priority = task.Priority,
+                CreateDate = task.CreateDate,
+            });
+        }
     }
 }
