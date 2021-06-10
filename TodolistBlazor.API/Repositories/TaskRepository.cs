@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TodolistBlazor.API.Data;
 using TodolistBlazor.Models;
 using TodolistBlazor.Models.DTOs;
+using TodolistBlazor.Models.SeedWork;
 using Task = TodolistBlazor.API.Entities.Task;
 
 namespace TodolistBlazor.API.Repositories
@@ -19,7 +20,7 @@ namespace TodolistBlazor.API.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Task>> GetTaskList(TaskListSearch taskListSearch)
+        public async Task<PagedList<Task>> GetTaskList(TaskListSearch taskListSearch)
         {
             var query = _context.Tasks.Include(x=>x.Assignee).AsQueryable();
             if (!string.IsNullOrEmpty(taskListSearch.Name))
@@ -35,7 +36,11 @@ namespace TodolistBlazor.API.Repositories
                 query = query.Where(x => x.Priority == taskListSearch.Priority.Value);
             }
 
-            return await query.OrderByDescending(x=>x.CreateDate).ToListAsync();
+            int skip = (taskListSearch.PageNumber - 1) * taskListSearch.PageSize;
+            var count = await query.CountAsync();
+            var data = await query.OrderByDescending(x => x.CreateDate).Skip(skip).Take(taskListSearch.PageSize).ToListAsync(); //trang 2 mà pagesize = 4 => (2-1)*4=4 => tức bỏ qua 4 record, trang 2 lấy từ record thứ 5
+
+            return new PagedList<Entities.Task>(data, count, taskListSearch.PageNumber, taskListSearch.PageSize);
         }
 
 

@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using TodolistBlazor.Models;
 using TodolistBlazor.Models.DTOs;
+using TodolistBlazor.Models.SeedWork;
 
 namespace TodolistBlazorWasm.Services
 {
     public interface ITaskAPIClient
     {
-        Task<List<TaskDTO>> GetTaskList(TaskListSearch taskListSearch);
+        Task<PagedList<TaskDTO>> GetTaskList(TaskListSearch taskListSearch);
 
         Task<TaskDTO> GetTaskDetail(string id);
 
