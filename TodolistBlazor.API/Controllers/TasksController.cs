@@ -126,7 +126,7 @@ namespace TodolistBlazor.API.Controllers
                 return NotFound($"{id} is not found");
             }
 
-            taskFromDb.AssigneeID = request.UserID.Value;// update field nào đó mà ko update tất
+            taskFromDb.AssigneeID = request.UserID.Value == Guid.Empty ? null : request.UserID.Value;// update field nào đó mà ko update tất
 
             var taskResult = await _taskRepository.Update(taskFromDb);
 
