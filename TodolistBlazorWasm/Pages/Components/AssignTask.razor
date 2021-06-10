@@ -21,7 +21,7 @@
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Recipient:</label>
                             <InputSelect class="form-control" @bind-Value="ModelAssign.UserID">
-                                <option>Select an user</option>
+                                <option value="@Guid.Empty">Select an user</option>
                                 @foreach (var assignee in Assignees)
                                     {
                                     <option value="@assignee.ID">@assignee.FullName</option>
