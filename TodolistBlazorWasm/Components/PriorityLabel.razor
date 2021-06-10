@@ -1,0 +1,23 @@
+﻿@using TodolistBlazor.Models.Enums;
+
+
+@switch (Priority)
+{
+    case Priority.Low:
+        <span class="badge badge-secondary">Low</span>
+        break;
+
+    case Priority.Medium:
+        <span class="badge badge-warning">Medium</span>
+        break;
+
+    case Priority.High:
+        <span class="badge badge-danger">High</span>
+        break;
+
+}
+
+@code {
+    [Parameter]
+    public Priority Priority { get; set; }
+}

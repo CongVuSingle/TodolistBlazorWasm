@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31321.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodolistBlazorWasm", "TodolistBlazorWasm\TodolistBlazorWasm.csproj", "{7FC3D51A-4F18-4A66-9CDC-6DA076C38342}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodolistBlazorWasm", "TodolistBlazorWasm\TodolistBlazorWasm.csproj", "{7FC3D51A-4F18-4A66-9CDC-6DA076C38342}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodolistBlazor.API", "TodolistBlazor.API\TodolistBlazor.API.csproj", "{C70C1294-F5AD-4C0E-8EB1-CEE52C4985AD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TodolistBlazor.Models", "TodolistBlazor.Models\TodolistBlazor.Models.csproj", "{6BCB3685-36DC-4183-A044-5CC84B962640}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{7FC3D51A-4F18-4A66-9CDC-6DA076C38342}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FC3D51A-4F18-4A66-9CDC-6DA076C38342}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FC3D51A-4F18-4A66-9CDC-6DA076C38342}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C70C1294-F5AD-4C0E-8EB1-CEE52C4985AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C70C1294-F5AD-4C0E-8EB1-CEE52C4985AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C70C1294-F5AD-4C0E-8EB1-CEE52C4985AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C70C1294-F5AD-4C0E-8EB1-CEE52C4985AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BCB3685-36DC-4183-A044-5CC84B962640}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BCB3685-36DC-4183-A044-5CC84B962640}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BCB3685-36DC-4183-A044-5CC84B962640}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BCB3685-36DC-4183-A044-5CC84B962640}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
