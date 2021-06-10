@@ -1,0 +1,54 @@
+﻿@page "/taskCreate"
+@using TodolistBlazor.Models.DTOs;
+@using TodolistBlazor.Models.Enums;
+@using TodolistBlazorWasm.Services;
+
+@inject ITaskAPIClient TaskAPIClient;
+@inject NavigationManager NavigationManager;
+@inject IToastService ToastService;
+
+
+<h3>Task Create</h3>
+
+<EditForm Model="Task" OnValidSubmit="@SubmitTask">
+    <DataAnnotationsValidator /> @*Phải có thẻ này mới dùng được validation*@
+    <div class="form-group">
+        <label for="Name">Name</label>
+        <InputText class="form-control" @bind-Value="Task.Name" placeholder="Name"></InputText>
+        <ValidationMessage For="()=>Task.Name"></ValidationMessage>
+        <small id="nameHelp" class="form-text text-muted">Please enter the task title here.</small>
+    </div>
+    <div class="form-group">
+        <label for="Priority">Priority</label>
+        <InputSelect class="form-control" @bind-Value="Task.Priority">
+            <option>Select an priority</option>
+            @foreach (string item in Enum.GetNames(typeof(Priority)))
+            {
+                <option value="@item">@item</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="()=>Task.Priority"></ValidationMessage>
+        <small id="nameHelp" class="form-text text-muted">Choose a priority which you want.</small>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@code {
+    private TaskCreateRequest Task = new TaskCreateRequest();
+
+    private async Task SubmitTask(EditContext context)
+    {
+        var result = await TaskAPIClient.CreateTask(Task);
+        if (result)
+        {
+
+            ToastService.ShowSuccess($"{Task.Name} has been created successfully.", "Success");
+            NavigationManager.NavigateTo("/Todolist");
+        }
+        else
+        {
+            ToastService.ShowError($"An error occurred in progress. Please contact to administrator.", "Error");
+        }
+    }
+}

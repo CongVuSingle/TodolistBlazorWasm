@@ -1,0 +1,29 @@
+﻿@using TodolistBlazor.Models.Enums;
+
+
+@switch (Status)
+{
+    case Status.Open:
+        <span class="badge badge-success">@nameof(Status.Open)</span>
+        break;
+    case Status.Inprogress:
+        <span class="badge badge-warning">@nameof(Status.Inprogress)</span>
+        break;
+    case Status.Resolved:
+        <span class="badge badge-danger">@nameof(Status.Resolved)</span>
+        break;
+    case Status.Done:
+        <span class="badge badge-primary">@nameof(Status.Done)</span>
+        break;
+    case Status.Canceled:
+        <span class="badge badge-secondary">@nameof(Status.Canceled)</span>
+        break;
+    case Status.Closed:
+        <span class="badge badge-dark">@nameof(Status.Closed)</span>
+        break;
+}
+
+@code {
+    [Parameter]
+    public Status Status { get; set; }
+}

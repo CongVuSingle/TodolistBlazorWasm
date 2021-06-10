@@ -1,0 +1,88 @@
+﻿@page "/Todolist"
+@using TodolistBlazorWasm.Components
+@using TodolistBlazor.Models.Enums;
+
+@inject IConfiguration Configuration
+
+<h3>TodoList 1</h3>
+
+@if (Tasks == null || Assignees == null)
+{
+    <LoadingIndicator></LoadingIndicator>
+}
+else
+{
+    <div class="row">
+        <EditForm Model="@TaskLiskSearch" OnSubmit=@SearchForm>
+            <div class="row">
+                <div class="col">
+                    <label>Name</label>
+                    <InputText class="form-control" placeholder="Name" @bind-Value="TaskLiskSearch.Name"></InputText>
+                </div>
+
+                <div class="col">
+                    <label>Assingee</label>
+                    <InputSelect class="form-control" @bind-Value="TaskLiskSearch.AssigneeID">
+                        <option>Select an assignee</option>
+                        @foreach (var assignee in Assignees)
+                            {
+                            <option value="@assignee.ID">@assignee.FullName</option>
+                            }
+                    </InputSelect>
+                </div>
+
+                <div class="col">
+                    <label>Priority</label>
+                    <InputSelect class="form-control" @bind-Value="TaskLiskSearch.Priority">
+                        <option>Select an priority</option>
+                        @foreach (string item in Enum.GetNames(typeof(Priority)))
+                            {
+                            <option value="@item">@item</option>
+                            }
+                    </InputSelect>
+                </div>
+
+                <div class="col">
+                    <button type="submit" class="btn btn-success mt-4">Search</button>
+                </div>
+
+                <div class="col">
+                    <a href="/taskCreate" class="btn btn-primary mt-4">Create</a>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+    <div class="row mt-5">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Priority</th>
+                    <th>Assignee</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Tasks)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td><PriorityLabel Priority="item.Priority"></PriorityLabel></td>
+                        <td>@item.AssigneeName</td>
+                        <td>@item.CreateDate.ToString(Configuration["DateTimeFormat"])</td>
+                        <td><StatusLabel Status="item.Status"></StatusLabel></td>
+                        <td>
+                            <a href="/taskDetails/@item.ID" class="btn btn-primary">Detail</a>
+                            <a href="/taskEdit/@item.ID" class="btn btn-warning">Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+
+
