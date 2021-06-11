@@ -18,7 +18,7 @@
             <div class="col">
                 <label>Assingee</label>
                 <InputSelect class="form-control" @bind-Value="TaskLiskSearch.AssigneeID">
-                    <option>Select an assignee</option>
+                    <option value="@Guid.Empty">Select an assignee</option>
                     @foreach (var assignee in Assignees)
                         {
                         <option value="@assignee.ID">@assignee.FullName</option>
@@ -29,7 +29,7 @@
             <div class="col">
                 <label>Priority</label>
                 <InputSelect class="form-control" @bind-Value="TaskLiskSearch.Priority">
-                    <option>Select an priority</option>
+                    <option value="@Guid.Empty">Select an priority</option>
                     @foreach (string item in Enum.GetNames(typeof(Priority)))
                         {
                         <option value="@item">@item</option>

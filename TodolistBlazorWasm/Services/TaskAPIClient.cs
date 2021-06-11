@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.WebUtilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -6,6 +7,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using TodolistBlazor.Models;
 using TodolistBlazor.Models.DTOs;
+using TodolistBlazor.Models.SeedWork;
 
 namespace TodolistBlazorWasm.Services
 {
@@ -36,10 +38,42 @@ namespace TodolistBlazorWasm.Services
             return result;
         }
 
-        public async Task<List<TaskDTO>> GetTaskList(TaskListSearch taskListSearch)
+        //public async Task<PagedList<TaskDTO>> GetTaskList(TaskListSearch taskListSearch)
+        //{
+        //    string url = $"/api/tasks?{taskListSearch.Name}" +
+        //                 $"&assigneeID={taskListSearch.AssigneeID}" +
+        //                 $"&priority={taskListSearch.Priority}";
+        //    var result = await _httpClient.GetFromJsonAsync<List<TaskDTO>>(url);
+        //    return result;
+        //}
+
+        public async Task<PagedList<TaskDTO>> GetTaskList(TaskListSearch taskListSearch)
         {
-            string url = $"/api/tasks?{taskListSearch.Name}&assigneeID={taskListSearch.AssigneeID}&priority={taskListSearch.Priority}";
-            var result = await _httpClient.GetFromJsonAsync<List<TaskDTO>>(url);
+            //string url = $"/api/tasks?{taskListSearch.Name}" + 
+            //             $"&assigneeID={taskListSearch.AssigneeID}" +  
+            //             $"&priority={taskListSearch.Priority}";
+
+            // tại đây truyền thêm pageNumber dùng queryBuilder cuar Utilities thay vì cộng chuỗi như trên
+            var queryStringParam = new Dictionary<string, string>
+            {
+                ["pageNumber"] = taskListSearch.PageNumber.ToString()
+            };
+
+            if (!string.IsNullOrEmpty(taskListSearch.Name))
+            {
+                queryStringParam.Add("name", taskListSearch.Name);
+            }
+            if (taskListSearch.AssigneeID.HasValue)
+            {
+                queryStringParam.Add("assigneeID", taskListSearch.AssigneeID.ToString());
+            }
+            if (taskListSearch.Priority.HasValue)
+            {
+                queryStringParam.Add("priority", taskListSearch.AssigneeID.ToString());
+            }
+
+            string url = QueryHelpers.AddQueryString("/api/tasks", queryStringParam);
+            var result = await _httpClient.GetFromJsonAsync<PagedList<TaskDTO>>(url);
             return result;
         }
 

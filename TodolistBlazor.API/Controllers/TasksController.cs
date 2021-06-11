@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TodolistBlazor.API.Repositories;
 using TodolistBlazor.Models;
 using TodolistBlazor.Models.DTOs;
+using TodolistBlazor.Models.SeedWork;
 
 namespace TodolistBlazor.API.Controllers
 {
@@ -24,37 +25,42 @@ namespace TodolistBlazor.API.Controllers
 
         //api/task?name=
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery]TaskListSearch taskListSearch)
-        {   
-            var tasks = await _taskRepository.GetTaskList(taskListSearch);
+        public async Task<IActionResult> GetAll([FromQuery] TaskListSearch taskListSearch)
+        {
+            var pagedList = await _taskRepository.GetTaskList(taskListSearch);
 
-            var taskDTOs = tasks.Select(x => new TaskDTO()
+            var taskDTOs = pagedList.Items.Select(x => new TaskDTO()
             {
                 Status = x.Status,
                 Name = x.Name,
                 AssigneeID = x.AssigneeID,
                 CreateDate = x.CreateDate,
                 ID = x.ID,
-                AssigneeName = x.Assignee!=null ? x.Assignee.FirstName + ' ' + x.Assignee.LastName : "N/A",
-            });
-            return Ok(taskDTOs);
+                AssigneeName = x.Assignee != null ? x.Assignee.FirstName + ' ' + x.Assignee.LastName : "N/A",
+            }).ToList();
+            return Ok(
+                new PagedList<TaskDTO>(taskDTOs,
+                pagedList.MetaData.TotalCount,
+                pagedList.MetaData.CurrentPage,
+                pagedList.MetaData.PageSize
+                ));
         }
 
 
         //api/tasks/1
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> GetByID([FromRoute]Guid id)
+        public async Task<IActionResult> GetByID([FromRoute] Guid id)
         {
             var task = await _taskRepository.GetByID(id);
-            if(task == null)
+            if (task == null)
             {
                 return NotFound($"{id} is not found");
             }
             return Ok(new TaskDTO()// dto đẻ hiển thị các field trên client
             {
                 Name = task.Name,
-                Status = task.Status, 
+                Status = task.Status,
                 ID = task.ID,
                 AssigneeID = task.AssigneeID,
                 Priority = task.Priority,
@@ -64,7 +70,7 @@ namespace TodolistBlazor.API.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Creat([FromBody]TaskCreateRequest request)
+        public async Task<IActionResult> Creat([FromBody] TaskCreateRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -77,20 +83,20 @@ namespace TodolistBlazor.API.Controllers
                 Status = Models.Enums.Status.Open,
                 CreateDate = DateTime.Now,
             });
-            return CreatedAtAction(nameof(GetByID), new {id = task.ID }, task);
+            return CreatedAtAction(nameof(GetByID), new { id = task.ID }, task);
             // nếu trả về là 200 code thì sẽ trả về hết field nào ko có thì null
             // còn field request để lúc điền vào ko bị lộ các field ko muốn show ra
         }
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<IActionResult> Update([FromRoute]Guid id, [FromBody]TaskUpdateRequest request)
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] TaskUpdateRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var taskFromDb = await _taskRepository.GetByID(id);
-            if(taskFromDb == null)
+            if (taskFromDb == null)
             {
                 return NotFound($"{id} is not found");
             }
@@ -100,7 +106,8 @@ namespace TodolistBlazor.API.Controllers
 
             var taskResult = await _taskRepository.Update(taskFromDb);
 
-            return Ok(new TaskDTO() { 
+            return Ok(new TaskDTO()
+            {
                 Name = taskResult.Name,
                 Status = taskResult.Status,
                 ID = taskResult.ID,

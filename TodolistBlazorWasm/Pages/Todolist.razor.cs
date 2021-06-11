@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TodolistBlazor.Models;
 using TodolistBlazor.Models.DTOs;
+using TodolistBlazor.Models.SeedWork;
 using TodolistBlazorWasm.Components;
 using TodolistBlazorWasm.Pages.Components;
 using TodolistBlazorWasm.Services;
@@ -24,16 +25,20 @@ namespace TodolistBlazorWasm.Pages
 
         private List<TaskDTO> Tasks;
 
+        public MetaData MetaData { get; set; } = new MetaData();
+
         private TaskListSearch TaskListSearch = new TaskListSearch();
         protected override async Task OnInitializedAsync()
         {
-            Tasks = await TaskAPIClient.GetTaskList(TaskListSearch);
+            //Tasks = await TaskAPIClient.GetTaskList(TaskListSearch);
+            await GetTasks();
         }
         
         public async Task SearchTask(TaskListSearch taskListSearch)
         {
             TaskListSearch = taskListSearch;
-            Tasks = await TaskAPIClient.GetTaskList(TaskListSearch);
+            //Tasks = await TaskAPIClient.GetTaskList(TaskListSearch);
+            await GetTasks();
         }
 
         public void OnDeleteTask(Guid deleteID)//button1
@@ -47,7 +52,8 @@ namespace TodolistBlazorWasm.Pages
             if (deleteConfirmed)
             {
                 await TaskAPIClient.DeleteTask(DeleteID);// sau khi ấn delete thì chưa xóa task đó mà phỉa reload tiếp
-                Tasks = await TaskAPIClient.GetTaskList(TaskListSearch); //gọi lại dòng này sẽ reload lại
+                /*Tasks = await TaskAPIClient.GetTaskList(TaskListSearch);*/ //gọi lại dòng này sẽ reload lại
+                await GetTasks();
             }
         }
         public void OpenAssignPopup(Guid ID)
@@ -59,8 +65,22 @@ namespace TodolistBlazorWasm.Pages
         {
             if (result) // nếu đúng thì reload lại trang
             {
-                Tasks = await TaskAPIClient.GetTaskList(TaskListSearch);
+                //Tasks = await TaskAPIClient.GetTaskList(TaskListSearch);
+                await GetTasks();
             }
+        }
+
+        private async Task GetTasks()
+        {
+            var pagingResponse = await TaskAPIClient.GetTaskList(TaskListSearch);
+            Tasks = pagingResponse.Items;
+            MetaData = pagingResponse.MetaData;
+        }
+
+        private async Task SelectedPage(int page)
+        {
+            TaskListSearch.PageNumber = page;
+            await GetTasks();
         }
     }
 
