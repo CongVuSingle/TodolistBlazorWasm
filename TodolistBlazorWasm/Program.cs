@@ -21,6 +21,7 @@ namespace TodolistBlazorWasm
             builder.Services.AddTransient<ITaskAPIClient, TaskAPIClient>();
             builder.Services.AddTransient<IUserAPIClient, UserAPIClient>();
             builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             // để dùng được ApiAuthenticationStateProvider thì cài package Microsoft.AspNetCore.Components.Authorization
             builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();

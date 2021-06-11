@@ -1,6 +1,9 @@
 ﻿@page "/login"
 @using TodolistBlazor.Models.LoginModels;
+@using TodolistBlazorWasm.Services;
 
+@inject NavigationManager NavigationManager; 
+@inject IAuthService AuthService;
 
 @if (ShowErrors) { 
     <div class="alert alert-danger">
@@ -41,5 +44,15 @@
     private async Task HandleLogin()
     {
         ShowErrors = false;
+        var result = await AuthService.Login(LoginModel);
+        if (result.Successful)
+        {
+            NavigationManager.NavigateTo("/todoList");
+        }
+        else
+        {
+            ShowErrors = true;
+            Error = result.Error;
+        }
     }
 }
