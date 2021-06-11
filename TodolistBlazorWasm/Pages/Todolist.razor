@@ -4,7 +4,7 @@
 
 @inject IConfiguration Configuration
 
-<h3>TodoList 1</h3>
+<h3>Todo List</h3>
 
 @if (Tasks == null)
 {
@@ -47,6 +47,9 @@ else
                     </tr>
                 }
             </tbody>
+            <tfoot>
+                <Pagination MetaData="MetaData" Spread="2" SelectedPage="SelectedPage"></Pagination>
+            </tfoot>
         </table>
     </div>
     <Confirmation ConfirmationMessage="Are you sure to delete?"
