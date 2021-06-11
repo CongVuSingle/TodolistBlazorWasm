@@ -1,0 +1,15 @@
+﻿@page "/logout"
+@using TodolistBlazorWasm.Services;
+
+@inject IAuthService Authservice
+@inject NavigationManager NavigationManager
+
+<h3>Logout</h3>
+
+@code { 
+    protected override async Task OnInitializedAsync()
+    {
+        await Authservice.LogOut();
+        NavigationManager.NavigateTo("/login");
+    }
+}
