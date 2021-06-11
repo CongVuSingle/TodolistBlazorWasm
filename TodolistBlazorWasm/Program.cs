@@ -22,6 +22,7 @@ namespace TodolistBlazorWasm
             builder.Services.AddTransient<IUserAPIClient, UserAPIClient>();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddAuthorizationCore();// có cái này mới dùng được AuthorizeView bên MainLayout.razor
 
             // để dùng được ApiAuthenticationStateProvider thì cài package Microsoft.AspNetCore.Components.Authorization
             builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
