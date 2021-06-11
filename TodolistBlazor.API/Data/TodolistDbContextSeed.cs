@@ -23,8 +23,11 @@ namespace TodolistBlazor.API.Data
                     FirstName = "Mr",
                     LastName = "Cong",
                     Email = "admin@gmail.com",
+                    NormalizedEmail = "ADMIN@GMAIL.COM",
                     PhoneNumber = "123456789",
                     UserName = "admin",
+                    NormalizedUserName = "ADMIN",
+                    SecurityStamp = Guid.NewGuid().ToString(),
 
                 };
                 user.PasswordHash = _passwordHasher.HashPassword(user, "Admin@123$");
