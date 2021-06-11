@@ -72,7 +72,7 @@ namespace TodolistBlazorWasm.Services
                 queryStringParam.Add("priority", taskListSearch.AssigneeID.ToString());
             }
 
-            string url = QueryHelpers.AddQueryString("/api/task", queryStringParam);
+            string url = QueryHelpers.AddQueryString("/api/tasks", queryStringParam);
             var result = await _httpClient.GetFromJsonAsync<PagedList<TaskDTO>>(url);
             return result;
         }
